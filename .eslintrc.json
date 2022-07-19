@@ -19,6 +19,6 @@
     "no-case-declarations": "off",
     "object-shorthand": ["error", "always"],
     "arrow-body-style": ["error", "as-needed"],
-    "indent": ["warn", "tab"]
+    "indent": ["warn", 2]
   }
 }
