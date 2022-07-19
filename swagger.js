@@ -7,12 +7,6 @@ const swaggerDefinition = {
     version: '1.0.0',
     title: 'Xendit tech assessment - Cielo Muyot'
   },
-  servers: [
-    {
-      url: `http://localhost:${config.get('server.port') || 8010}`,
-      description: 'Development server'
-    }
-  ],
   host: `localhost:${config.get('server.port') || 8010}`,
   basePath: '/'
 };
