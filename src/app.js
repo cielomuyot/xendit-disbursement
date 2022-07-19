@@ -70,7 +70,7 @@ module.exports = db => {
       })
     }
 
-    var values = [
+    const values = [
       req.body.start_lat,
       req.body.start_long,
       req.body.end_lat,
@@ -80,7 +80,7 @@ module.exports = db => {
       req.body.driver_vehicle,
     ]
 
-    const result = db.run(
+    db.run(
       'INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)',
       values,
       function (err) {
@@ -103,9 +103,9 @@ module.exports = db => {
             }
 
             res.send(rows)
-          }
+          },
         )
-      }
+      },
     )
   })
 
@@ -148,7 +148,7 @@ module.exports = db => {
         }
 
         res.send(rows)
-      }
+      },
     )
   })
 
