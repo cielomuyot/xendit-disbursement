@@ -99,7 +99,7 @@ describe('/rides', () => {
     it('should return correct response if there is no ride with the given id', async () => {
       const inexistentId = -1
       const {type, statusCode, body} = await request(app).get(
-        `/rides/${inexistentId}`
+        `/rides/${inexistentId}`,
       )
 
       expect(type).to.be.equal('application/json')
@@ -253,7 +253,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
 
@@ -274,7 +274,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
         })
@@ -297,7 +297,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
 
@@ -318,7 +318,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
         })
@@ -341,7 +341,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
 
@@ -362,7 +362,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
         })
@@ -385,7 +385,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
 
@@ -406,7 +406,7 @@ describe('/rides', () => {
 
             expect(message).to.be.a('string')
             expect(message).to.be.equal(
-              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
             )
           })
         })
