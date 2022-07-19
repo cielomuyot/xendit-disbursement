@@ -1,17 +1,19 @@
-'use strict';
+'use strict'
 
 const config = require('config')
-const port = config.get('server.port') || 8010;
+const port = config.get('server.port') || 8010
 
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(':memory:');
+const sqlite3 = require('sqlite3').verbose()
+const db = new sqlite3.Database(':memory:')
 
-const buildSchemas = require('./src/schemas');
+const buildSchemas = require('./src/schemas')
 
 db.serialize(() => {
-    buildSchemas(db);
+  buildSchemas(db)
 
-    const app = require('./src/app')(db);
+  const app = require('./src/app')(db)
 
-    app.listen(port, () => console.log(`App started and listening on port ${port}`));
-});
+  app.listen(port, () =>
+    console.log(`App started and listening on port ${port}`)
+  )
+})

@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js",
+    "prettify": "pretty-quick --staged"
   },
   "keywords": [
     "Xendit"
@@ -25,8 +26,23 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
+    "eslint": "^8.20.0",
+    "husky": "^8.0.1",
     "mocha": "^9.2.1",
     "nodemon": "^2.0.19",
+    "pretty-quick": "^3.1.3",
     "supertest": "^6.2.2"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "trailingComma": "es5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettify"
+    }
   }
 }
