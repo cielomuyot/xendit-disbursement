@@ -1,0 +1,132 @@
+paths:
+  /rides/:
+    get:
+      summary: 'List rides'
+      description: 'List rides'
+      produces:
+        - 'application/json'
+      responses:
+        200:
+          description: 'Object containing rides and their metadata'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Ride'
+    post:
+      summary: 'Add a new ride'
+      description: 'Add a new ride'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+      - in: body
+        name: 'body'
+        required: true
+        schema:
+          $ref: '#/definitions/RideNew'
+      responses:
+        200:
+          description: 'Object containing the newly created ride'
+          schema:
+            $ref: '#/definitions/Ride'
+  /rides/{id}:
+    get:
+      summary: 'Get ride by id'
+      description: 'Get ride by id'
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: number
+      produces:
+        - 'application/json'
+      responses:
+        200:
+          description: 'Object containing a specific ride and its metadata'
+          schema:
+            $ref: '#/definitions/Ride'
+definitions:
+  Ride:
+    type: object
+    required:
+      - 'id'
+      - 'startLat'
+      - 'startLong'
+      - 'endLat'
+      - 'endLong'
+      - 'riderName'
+      - 'driverName'
+      - 'driverVehicle'
+    properties:
+      id:
+        type: number
+        description: 'Ride ID'
+        example: 1
+      startLat:
+        type: number
+        description: 'Start latitude of the ride. Value is between -90 to 90 degrees.'
+        example: -90
+      startLong:
+        type: number
+        description: 'Start longitude of the ride. Value is between -180 to 180 degrees.'
+        example: -180
+      endLat:
+        type: number
+        description: 'End latitude of the ride. Value is between -90 to 90 degrees.'
+        example: 90
+      endLong:
+        type: number
+        description: 'End longitude of the ride. Value is between -180 to 180 degrees.'
+        example: 180
+      riderName:
+        type: string
+        description: 'Rider name'
+        example: 'John Doe'
+      driverName:
+        type: string
+        description: 'Driver name'
+        example: 'Jake Doe'
+      driverVehicle:
+        type: string
+        description: 'Vehicle model'
+        example: 'Honda Civic'
+  RideNew:
+    type: object
+    required:
+      - 'start_lat'
+      - 'start_long'
+      - 'end_lat'
+      - 'end_long'
+      - 'rider_name'
+      - 'driver_name'
+      - 'driver_vehicle'
+    properties:
+      start_lat:
+        type: number
+        description: 'Start latitude of the ride. Value is between -90 to 90 degrees.'
+        example: -90
+      start_long:
+        type: number
+        description: 'Start longitude of the ride. Value is between -180 to 180 degrees.'
+        example: -180
+      end_lat:
+        type: number
+        description: 'End latitude of the ride. Value is between -90 to 90 degrees.'
+        example: 90
+      end_long:
+        type: number
+        description: 'End longitude of the ride. Value is between -180 to 180 degrees.'
+        example: 180
+      rider_name:
+        type: string
+        description: 'Rider name'
+        example: 'John Doe'
+      driver_name:
+        type: string
+        description: 'Driver name'
+        example: 'Jake Doe'
+      driver_vehicle:
+        type: string
+        description: 'Vehicle model'
+        example: 'Honda Civic'
