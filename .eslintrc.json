@@ -1,7 +1,8 @@
 {
   "env": {
     "node": true,
-    "es6": true
+    "es6": true,
+    "mocha": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
@@ -18,6 +19,6 @@
     "no-case-declarations": "off",
     "object-shorthand": ["error", "always"],
     "arrow-body-style": ["error", "as-needed"],
-    "indent": "off"
+    "indent": ["warn", "tab"]
   }
 }
