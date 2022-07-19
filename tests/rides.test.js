@@ -176,4 +176,424 @@ describe('/rides', () => {
       expect(driverVehicle).to.be.equal(expectedResponse.driverVehicle)
     })
   })
+
+  describe('POST /:id', () => {
+    it('should successfully add a new ride', async () => {
+      const rideBody = createRideBody()
+
+      const {
+        type,
+        statusCode,
+        body: newRide,
+      } = await request(app).post('/rides').send(rideBody)
+
+      expect(type).to.be.equal('application/json')
+      expect(statusCode).to.be.equal(200)
+
+      const expectedResponse = convertRideResponse(rideBody)
+
+      expect(newRide).to.be.an('array')
+      expect(newRide.length).to.be.equal(1)
+
+      const [
+        {
+          rideID,
+          startLat,
+          endLat,
+          startLong,
+          endLong,
+          riderName,
+          driverName,
+          driverVehicle,
+        },
+      ] = newRide
+
+      expect(rideID).to.be.a('number')
+      expect(rideID).to.not.be.undefined
+
+      expect(startLat).to.be.a('number')
+      expect(startLat).to.be.equal(expectedResponse.startLat)
+
+      expect(endLat).to.be.a('number')
+      expect(endLat).to.be.equal(expectedResponse.endLat)
+
+      expect(startLong).to.be.a('number')
+      expect(startLong).to.be.equal(expectedResponse.startLong)
+
+      expect(endLong).to.be.a('number')
+      expect(endLong).to.be.equal(expectedResponse.endLong)
+
+      expect(riderName).to.be.a('string')
+      expect(riderName).to.be.equal(expectedResponse.riderName)
+
+      expect(driverName).to.be.a('string')
+      expect(driverName).to.be.equal(expectedResponse.driverName)
+
+      expect(driverVehicle).to.be.a('string')
+      expect(driverVehicle).to.be.equal(expectedResponse.driverVehicle)
+    })
+
+    describe('errors', () => {
+      describe('body validation', () => {
+        describe('start_lat', () => {
+          it('should return error if start_lat is less than -90', async () => {
+            const rideBody = createRideBody({start_lat: -91})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+
+          it('should return error if start_lat is more than 90', async () => {
+            const rideBody = createRideBody({start_lat: 91})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+        })
+
+        describe('end_lat', () => {
+          it('should return error if end_lat is less than -90', async () => {
+            const rideBody = createRideBody({end_lat: -91})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+
+          it('should return error if end_lat is more than 90', async () => {
+            const rideBody = createRideBody({end_lat: 91})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+        })
+
+        describe('start_long', () => {
+          it('should return error if start_long is less than -180', async () => {
+            const rideBody = createRideBody({start_long: -181})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+
+          it('should return error if start_long is more than 180', async () => {
+            const rideBody = createRideBody({start_long: 181})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+        })
+
+        describe('end_long', () => {
+          it('should return error if end_long is less than -180', async () => {
+            const rideBody = createRideBody({end_long: -181})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+
+          it('should return error if end_long is more than 180', async () => {
+            const rideBody = createRideBody({end_long: 181})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal(
+              'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            )
+          })
+        })
+
+        describe('rider_name', () => {
+          it('should return error if rider_name is not a string', async () => {
+            const rideBody = createRideBody({rider_name: 100})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if rider_name is empty', async () => {
+            const rideBody = createRideBody({rider_name: ''})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if rider_name is undefined', async () => {
+            const rideBody = createRideBody()
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app)
+              .post('/rides')
+              .send({...rideBody, rider_name: undefined})
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+        })
+
+        describe('driver_name', () => {
+          it('should return error if driver_name is not a string', async () => {
+            const rideBody = createRideBody({driver_name: 100})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if driver_name is empty', async () => {
+            const rideBody = createRideBody({driver_name: ''})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if driver_name is undefined', async () => {
+            const rideBody = createRideBody()
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app)
+              .post('/rides')
+              .send({...rideBody, driver_name: undefined})
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+        })
+
+        describe('driver_vehicle', () => {
+          it('should return error if driver_vehicle is not a string', async () => {
+            const rideBody = createRideBody({driver_vehicle: 100})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if driver_vehicle is empty', async () => {
+            const rideBody = createRideBody({driver_vehicle: ''})
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app).post('/rides').send(rideBody)
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+
+          it('should return error if driver_vehicle is undefined', async () => {
+            const rideBody = createRideBody()
+
+            const {
+              type,
+              statusCode,
+              body: {error_code, message},
+            } = await request(app)
+              .post('/rides')
+              .send({...rideBody, driver_vehicle: undefined})
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('VALIDATION_ERROR')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('Rider name must be a non empty string')
+          })
+        })
+      })
+    })
+  })
 })
