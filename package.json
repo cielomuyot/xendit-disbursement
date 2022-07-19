@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests",
+    "test": "nyc --reporter=text --reporter lcov mocha --recursive tests",
     "start": "node index.js",
     "start:dev": "nodemon index.js",
     "prettify": "pretty-quick --staged"
@@ -26,23 +26,27 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
     "eslint": "^8.20.0",
+    "eslint-plugin-mocha": "^10.0.5",
     "husky": "^8.0.1",
     "mocha": "^9.2.1",
     "nodemon": "^2.0.19",
+    "nyc": "^15.1.0",
+    "prettier": "^2.7.1",
     "pretty-quick": "^3.1.3",
     "supertest": "^6.2.2"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "arrowParens": "avoid",
-    "bracketSpacing": false,
-    "trailingComma": "es5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run prettify"
-    }
+  "nyc": {
+    "check-coverage": true,
+    "branches": 80,
+    "lines": 80,
+    "statements": 80,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "**/*.test.js"
+    ]
   }
 }
