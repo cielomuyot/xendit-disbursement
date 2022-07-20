@@ -1,7 +1,8 @@
 'use strict'
 
-const config = require('config')
-const port = config.get('server.port') || 8010
+require('dotenv').config()
+
+const port = process.env.PORT || 8010
 
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')

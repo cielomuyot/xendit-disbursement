@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.6
+
+jobs:
+  run-tests:
+    docker:
+      - image: node:14.17.6
+    steps:
+      - checkout
+      - run:
+          name: install-packages
+          command: npm install
+      - run:
+          name: Run tests
+          command: npm test
+
+workflows:
+  run-tests-workflow:
+    jobs:
+      - run-tests
+  heroku_deploy:
+    jobs:
+      - heroku/deploy-via-git:
+          filters:
+            branches:
+              only:
+                - master
