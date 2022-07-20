@@ -1,6 +1,6 @@
 'use strict'
 
-const {numberBetween} = require('../utils/randomGenerator')
+const { numberBetween } = require('../utils/randomGenerator')
 
 /**
  * Create an object for a ride. Values will be randomized if not passed.
@@ -64,4 +64,4 @@ const convertRideResponse = ({
   driverVehicle: driver_vehicle,
 })
 
-module.exports = {createRideBody, convertRideResponse}
+module.exports = { createRideBody, convertRideResponse }
