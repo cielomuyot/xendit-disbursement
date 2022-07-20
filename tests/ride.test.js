@@ -10,8 +10,13 @@ const { initializeDb } = require('../src/utils/db')
 
 const { createRideBody, convertRideResponse } = require('./drivers/ride')
 
+const logOnlyFailingTests = require('./utils/logOnlyFailingTests')
+
 describe('/rides', () => {
   let app
+
+  logOnlyFailingTests(afterEach)
+
   before(async () => {
     const db = await initializeDb()
 
@@ -23,7 +28,7 @@ describe('/rides', () => {
       const { type, statusCode, body } = await request(app).get('/rides')
 
       expect(type).to.be.equal('application/json')
-      expect(statusCode).to.be.equal(200)
+      expect(statusCode).to.be.equal(404)
 
       expect(body).to.be.an('object')
 
@@ -180,7 +185,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?page=test')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -197,7 +202,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?page=-1')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -216,7 +221,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?limit=test')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -233,7 +238,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?limit=-1')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -254,7 +259,7 @@ describe('/rides', () => {
       )
 
       expect(type).to.be.equal('application/json')
-      expect(statusCode).to.be.equal(200)
+      expect(statusCode).to.be.equal(404)
 
       expect(body).to.be.an('object')
 
@@ -397,7 +402,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -418,7 +423,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -441,7 +446,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -462,7 +467,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -485,7 +490,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -506,7 +511,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -529,7 +534,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -550,7 +555,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -573,7 +578,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -592,7 +597,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -613,7 +618,7 @@ describe('/rides', () => {
               .send({ ...rideBody, rider_name: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -634,7 +639,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -655,7 +660,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -678,7 +683,7 @@ describe('/rides', () => {
               .send({ ...rideBody, driver_name: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -701,7 +706,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -722,7 +727,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -745,7 +750,7 @@ describe('/rides', () => {
               .send({ ...rideBody, driver_vehicle: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
