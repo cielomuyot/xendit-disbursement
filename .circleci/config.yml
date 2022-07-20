@@ -18,8 +18,6 @@ jobs:
   build-test-deploy:
     docker:
       - image: node:14.17.6
-    requires:
-      - build-and-test
     steps:
       - build-and-test
       - heroku/deploy-via-git
