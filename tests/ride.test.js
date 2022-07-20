@@ -331,6 +331,23 @@ describe('/rides', () => {
       expect(driverVehicle).to.be.a('string')
       expect(driverVehicle).to.be.equal(expectedResponse.driverVehicle)
     })
+
+    it('should not return data if id = "1 or 1=1"', async () => {
+      const { body: validResult } = await request(app).get('/rides/1')
+      expect(validResult.length).to.be.equal(1)
+
+      const {
+        statusCode,
+        body: { error_code, message },
+      } = await request(app).get('/rides/1 or 1=1')
+
+      expect(statusCode).to.be.equal(404)
+      expect(error_code).to.be.a('string')
+      expect(error_code).to.be.equal('RIDES_NOT_FOUND_ERROR')
+
+      expect(message).to.be.a('string')
+      expect(message).to.be.equal('Could not find any rides')
+    })
   })
 
   describe('POST /:id', () => {
