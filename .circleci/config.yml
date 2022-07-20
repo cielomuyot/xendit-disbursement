@@ -3,10 +3,8 @@ version: 2.1
 orbs:
   heroku: circleci/heroku@1.2.6
 
-jobs:
-  run-tests:
-    docker:
-      - image: node:14.17.6
+commands:
+  build-and-test-command:
     steps:
       - checkout
       - run:
@@ -16,13 +14,30 @@ jobs:
           name: Run tests
           command: npm test
 
+jobs:
+  build-and-test:
+    docker:
+      - image: node:14.17.6
+    steps:
+      - build-and-test-command
+  build-test-deploy:
+    docker:
+      - image: node:14.17.6
+    steps:
+      - build-and-test-command
+      - heroku/deploy-via-git
+
 workflows:
-  run-tests-workflow:
+  build-test:
     jobs:
-      - run-tests
-  heroku_deploy:
+      - build-and-test:
+          filters:
+            branches:
+              ignore:
+                - master
+  build-test-deploy:
     jobs:
-      - heroku/deploy-via-git:
+      - build-test-deploy:
           filters:
             branches:
               only:
