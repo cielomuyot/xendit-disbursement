@@ -2,28 +2,20 @@
 
 const { expect } = require('chai')
 const request = require('supertest')
+const createApp = require('../src/app')
 
 const { range, orderBy } = require('lodash')
 
-const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database(':memory:')
-
-const app = require('../src/app')(db)
-const buildSchemas = require('../src/schemas')
+const { initializeDb } = require('../src/utils/db')
 
 const { createRideBody, convertRideResponse } = require('./drivers/ride')
 
 describe('/rides', () => {
-  before(done => {
-    db.serialize(err => {
-      if (err) {
-        return done(err)
-      }
+  let app
+  before(async () => {
+    const db = await initializeDb()
 
-      buildSchemas(db)
-
-      done()
-    })
+    app = createApp(db)
   })
 
   describe('GET /', () => {

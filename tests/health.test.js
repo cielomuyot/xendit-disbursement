@@ -1,24 +1,16 @@
 'use strict'
 
 const request = require('supertest')
+const createApp = require('../src/app')
 
-const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database(':memory:')
-
-const app = require('../src/app')(db)
-const buildSchemas = require('../src/schemas')
+const { initializeDb } = require('../src/utils/db')
 
 describe('/health', () => {
-  before(done => {
-    db.serialize(err => {
-      if (err) {
-        return done(err)
-      }
+  let app
+  before(async () => {
+    const db = await initializeDb()
 
-      buildSchemas(db)
-
-      done()
-    })
+    app = createApp(db)
   })
 
   describe('GET /health', () => {
