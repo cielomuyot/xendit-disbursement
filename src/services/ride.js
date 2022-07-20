@@ -6,7 +6,17 @@ const {
   InvalidLimitRangeError,
 } = require('../utils/pagination')
 
+const {
+  InvalidStartingCoordinatesError,
+  InvalidEndingCoordinatesError,
+  InvalidRiderNameError,
+  InvalidDriverNameError,
+  InvalidDriverVehicleError,
+  validateRidePayload,
+} = require('../utils/validation')
+
 const listRides = require('../daos/ride/list')
+const createRide = require('../daos/ride/create')
 const { NoRidesFoundError } = require('../daos/ride/errors')
 
 const list = db => async (req, res) => {
@@ -47,9 +57,88 @@ const list = db => async (req, res) => {
         })
         break
       default:
-        res.send('Unknown error')
+        res.send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
+        })
     }
   }
 }
 
-module.exports = { list }
+const create = db => async (req, res) => {
+  try {
+    const {
+      start_lat,
+      start_long,
+      end_lat,
+      end_long,
+      rider_name,
+      driver_name,
+      driver_vehicle,
+    } = req.body
+
+    validateRidePayload({
+      start_lat,
+      start_long,
+      end_lat,
+      end_long,
+      rider_name,
+      driver_name,
+      driver_vehicle,
+    })
+
+    const ride = await createRide(db)({
+      start_lat,
+      start_long,
+      end_lat,
+      end_long,
+      rider_name,
+      driver_name,
+      driver_vehicle,
+    })
+
+    res.send(ride)
+  } catch (err) {
+    switch (err.constructor) {
+      case InvalidStartingCoordinatesError:
+        res.send({
+          error_code: 'VALIDATION_ERROR',
+          message:
+            'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+        })
+        break
+      case InvalidEndingCoordinatesError:
+        res.send({
+          error_code: 'VALIDATION_ERROR',
+          message:
+            'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+        })
+        break
+      case InvalidRiderNameError:
+        res.send({
+          error_code: 'VALIDATION_ERROR',
+          message: 'Rider name must be a non empty string',
+        })
+        break
+      case InvalidDriverNameError:
+        res.send({
+          error_code: 'VALIDATION_ERROR',
+          message: 'Driver name must be a non empty string',
+        })
+        break
+      case InvalidDriverVehicleError:
+        res.send({
+          error_code: 'VALIDATION_ERROR',
+          message: 'Driver vehicle must be a non empty string',
+        })
+        break
+      default:
+        res.send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
+        })
+    }
+  }
+}
+
+module.exports = { list, create }
