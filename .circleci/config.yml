@@ -4,7 +4,7 @@ orbs:
   heroku: circleci/heroku@1.2.6
 
 jobs:
-  run-tests:
+  build:
     docker:
       - image: node:14.17.6
     steps:
@@ -12,16 +12,19 @@ jobs:
       - run:
           name: install-packages
           command: npm install
+  test:
+    docker:
+      - image: node:14.17.6
+    steps:
       - run:
           name: Run tests
           command: npm test
 
 workflows:
-  run-tests-workflow:
+  build-test-deploy:
     jobs:
-      - run-tests
-  heroku_deploy:
-    jobs:
+      - build
+      - test
       - heroku/deploy-via-git:
           filters:
             branches:
