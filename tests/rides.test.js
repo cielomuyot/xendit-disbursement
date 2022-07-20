@@ -1,6 +1,6 @@
 'use strict'
 
-const {expect} = require('chai')
+const { expect } = require('chai')
 const request = require('supertest')
 
 const sqlite3 = require('sqlite3').verbose()
@@ -9,7 +9,7 @@ const db = new sqlite3.Database(':memory:')
 const app = require('../src/app')(db)
 const buildSchemas = require('../src/schemas')
 
-const {createRideBody, convertRideResponse} = require('./drivers/ride')
+const { createRideBody, convertRideResponse } = require('./drivers/ride')
 
 describe('/rides', () => {
   before(done => {
@@ -26,14 +26,14 @@ describe('/rides', () => {
 
   describe('GET /', () => {
     it('should return correct response if there are no rides saved', async () => {
-      const {type, statusCode, body} = await request(app).get('/rides')
+      const { type, statusCode, body } = await request(app).get('/rides')
 
       expect(type).to.be.equal('application/json')
       expect(statusCode).to.be.equal(200)
 
       expect(body).to.be.an('object')
 
-      const {error_code, message} = body
+      const { error_code, message } = body
       expect(error_code).to.be.a('string')
       expect(error_code).to.be.equal('RIDES_NOT_FOUND_ERROR')
 
@@ -46,7 +46,7 @@ describe('/rides', () => {
 
       await request(app).post('/rides').send(rideBody)
 
-      const {type, statusCode, body: rides} = await request(app).get('/rides')
+      const { type, statusCode, body: rides } = await request(app).get('/rides')
 
       expect(type).to.be.equal('application/json')
       expect(statusCode).to.be.equal(200)
@@ -98,7 +98,7 @@ describe('/rides', () => {
   describe('GET /:id', () => {
     it('should return correct response if there is no ride with the given id', async () => {
       const inexistentId = -1
-      const {type, statusCode, body} = await request(app).get(
+      const { type, statusCode, body } = await request(app).get(
         `/rides/${inexistentId}`,
       )
 
@@ -107,7 +107,7 @@ describe('/rides', () => {
 
       expect(body).to.be.an('object')
 
-      const {error_code, message} = body
+      const { error_code, message } = body
       expect(error_code).to.be.a('string')
       expect(error_code).to.be.equal('RIDES_NOT_FOUND_ERROR')
 
@@ -121,7 +121,7 @@ describe('/rides', () => {
 
       await request(app).post('/rides').send(firstRideBody)
       const {
-        body: [{rideID: secondRideID}],
+        body: [{ rideID: secondRideID }],
       } = await request(app).post('/rides').send(secondRideBody)
 
       const {
@@ -237,12 +237,12 @@ describe('/rides', () => {
       describe('body validation', () => {
         describe('start_lat', () => {
           it('should return error if start_lat is less than -90', async () => {
-            const rideBody = createRideBody({start_lat: -91})
+            const rideBody = createRideBody({ start_lat: -91 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -258,12 +258,12 @@ describe('/rides', () => {
           })
 
           it('should return error if start_lat is more than 90', async () => {
-            const rideBody = createRideBody({start_lat: 91})
+            const rideBody = createRideBody({ start_lat: 91 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -281,12 +281,12 @@ describe('/rides', () => {
 
         describe('end_lat', () => {
           it('should return error if end_lat is less than -90', async () => {
-            const rideBody = createRideBody({end_lat: -91})
+            const rideBody = createRideBody({ end_lat: -91 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -302,12 +302,12 @@ describe('/rides', () => {
           })
 
           it('should return error if end_lat is more than 90', async () => {
-            const rideBody = createRideBody({end_lat: 91})
+            const rideBody = createRideBody({ end_lat: 91 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -325,12 +325,12 @@ describe('/rides', () => {
 
         describe('start_long', () => {
           it('should return error if start_long is less than -180', async () => {
-            const rideBody = createRideBody({start_long: -181})
+            const rideBody = createRideBody({ start_long: -181 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -346,12 +346,12 @@ describe('/rides', () => {
           })
 
           it('should return error if start_long is more than 180', async () => {
-            const rideBody = createRideBody({start_long: 181})
+            const rideBody = createRideBody({ start_long: 181 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -369,12 +369,12 @@ describe('/rides', () => {
 
         describe('end_long', () => {
           it('should return error if end_long is less than -180', async () => {
-            const rideBody = createRideBody({end_long: -181})
+            const rideBody = createRideBody({ end_long: -181 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -390,12 +390,12 @@ describe('/rides', () => {
           })
 
           it('should return error if end_long is more than 180', async () => {
-            const rideBody = createRideBody({end_long: 181})
+            const rideBody = createRideBody({ end_long: 181 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -413,12 +413,12 @@ describe('/rides', () => {
 
         describe('rider_name', () => {
           it('should return error if rider_name is not a string', async () => {
-            const rideBody = createRideBody({rider_name: 100})
+            const rideBody = createRideBody({ rider_name: 100 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -432,12 +432,12 @@ describe('/rides', () => {
           })
 
           it('should return error if rider_name is empty', async () => {
-            const rideBody = createRideBody({rider_name: ''})
+            const rideBody = createRideBody({ rider_name: '' })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -456,10 +456,10 @@ describe('/rides', () => {
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app)
               .post('/rides')
-              .send({...rideBody, rider_name: undefined})
+              .send({ ...rideBody, rider_name: undefined })
 
             expect(type).to.be.equal('application/json')
             expect(statusCode).to.be.equal(200)
@@ -474,12 +474,12 @@ describe('/rides', () => {
 
         describe('driver_name', () => {
           it('should return error if driver_name is not a string', async () => {
-            const rideBody = createRideBody({driver_name: 100})
+            const rideBody = createRideBody({ driver_name: 100 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -493,12 +493,12 @@ describe('/rides', () => {
           })
 
           it('should return error if driver_name is empty', async () => {
-            const rideBody = createRideBody({driver_name: ''})
+            const rideBody = createRideBody({ driver_name: '' })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -517,10 +517,10 @@ describe('/rides', () => {
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app)
               .post('/rides')
-              .send({...rideBody, driver_name: undefined})
+              .send({ ...rideBody, driver_name: undefined })
 
             expect(type).to.be.equal('application/json')
             expect(statusCode).to.be.equal(200)
@@ -535,12 +535,12 @@ describe('/rides', () => {
 
         describe('driver_vehicle', () => {
           it('should return error if driver_vehicle is not a string', async () => {
-            const rideBody = createRideBody({driver_vehicle: 100})
+            const rideBody = createRideBody({ driver_vehicle: 100 })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -554,12 +554,12 @@ describe('/rides', () => {
           })
 
           it('should return error if driver_vehicle is empty', async () => {
-            const rideBody = createRideBody({driver_vehicle: ''})
+            const rideBody = createRideBody({ driver_vehicle: '' })
 
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
@@ -578,10 +578,10 @@ describe('/rides', () => {
             const {
               type,
               statusCode,
-              body: {error_code, message},
+              body: { error_code, message },
             } = await request(app)
               .post('/rides')
-              .send({...rideBody, driver_vehicle: undefined})
+              .send({ ...rideBody, driver_vehicle: undefined })
 
             expect(type).to.be.equal('application/json')
             expect(statusCode).to.be.equal(200)
