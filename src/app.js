@@ -110,23 +110,59 @@ module.exports = db => {
   })
 
   app.get('/rides', (req, res) => {
-    db.all('SELECT * FROM Rides', function (err, rows) {
-      if (err) {
+    if (req.query.page) {
+      if (isNaN(req.query.page)) {
         return res.send({
-          error_code: 'SERVER_ERROR',
-          message: 'Unknown error',
+          error_code: 'INVALID_PAGINATION',
+          message: 'page should be a number',
+        })
+      } else if (req.query.page < 1) {
+        return res.send({
+          error_code: 'INVALID_PAGINATION',
+          message: 'page should be greater than 0',
         })
       }
+    }
 
-      if (rows.length === 0) {
+    if (req.query.limit) {
+      if (isNaN(req.query.limit)) {
         return res.send({
-          error_code: 'RIDES_NOT_FOUND_ERROR',
-          message: 'Could not find any rides',
+          error_code: 'INVALID_PAGINATION',
+          message: 'limit should be a number',
+        })
+      } else if (req.query.limit < 1) {
+        return res.send({
+          error_code: 'INVALID_PAGINATION',
+          message: 'limit should be greater than 0',
         })
       }
+    }
 
-      res.send(rows)
-    })
+    const page = req.query.page - 1 || 0
+    const limit = req.query.limit || 5
+
+    const offset = page * limit
+
+    db.all(
+      `SELECT * FROM Rides LIMIT ${limit} OFFSET ${offset}`,
+      function (err, rows) {
+        if (err) {
+          return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error',
+          })
+        }
+
+        if (rows.length === 0) {
+          return res.send({
+            error_code: 'RIDES_NOT_FOUND_ERROR',
+            message: 'Could not find any rides',
+          })
+        }
+
+        res.send(rows)
+      },
+    )
   })
 
   app.get('/rides/:id', (req, res) => {

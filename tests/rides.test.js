@@ -3,6 +3,8 @@
 const { expect } = require('chai')
 const request = require('supertest')
 
+const { range, orderBy } = require('lodash')
+
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')
 
@@ -92,6 +94,163 @@ describe('/rides', () => {
 
       expect(driverVehicle).to.be.a('string')
       expect(driverVehicle).to.be.equal(expectedResponse.driverVehicle)
+    })
+
+    describe('pagination', () => {
+      it('should return 5 rides by default', async () => {
+        const {
+          body: [initialData],
+        } = await request(app).get('/rides')
+
+        const rideBody = createRideBody()
+
+        const newRides = await Promise.all(
+          range(0, 5).map(async () => {
+            const {
+              body: [newRide],
+            } = await request(app).post('/rides').send(rideBody)
+
+            return newRide
+          }),
+        )
+
+        const sortedRides = orderBy(
+          [...newRides, initialData],
+          ride => ride.rideID,
+          'asc',
+        )
+
+        const expectedRides = sortedRides.slice(0, 5)
+
+        const {
+          type,
+          statusCode,
+          body: rides,
+        } = await request(app).get('/rides')
+
+        expect(type).to.be.equal('application/json')
+        expect(statusCode).to.be.equal(200)
+
+        expect(rides.length).to.be.equal(5)
+
+        expect(rides).to.deep.equal(expectedRides)
+      })
+
+      it('should return the correct rides from limit', async () => {
+        const { body: allRides } = await request(app).get('/rides')
+
+        const sortedRides = orderBy(allRides, ride => ride.rideID, 'asc')
+
+        const expectedRides = sortedRides.slice(0, 3)
+
+        const {
+          type,
+          statusCode,
+          body: rides,
+        } = await request(app).get('/rides?page=1&limit=3')
+
+        expect(type).to.be.equal('application/json')
+        expect(statusCode).to.be.equal(200)
+
+        expect(rides.length).to.be.equal(3)
+
+        expect(rides).to.deep.equal(expectedRides)
+      })
+
+      it('should return the correct rides from offset', async () => {
+        const { body: allRides } = await request(app).get('/rides?limit=20')
+
+        const sortedRides = orderBy(allRides, ride => ride.rideID, 'asc')
+
+        const expectedRides = sortedRides.slice(3, 6)
+
+        const {
+          type,
+          statusCode,
+          body: rides,
+        } = await request(app).get('/rides?page=2&limit=3')
+
+        expect(type).to.be.equal('application/json')
+        expect(statusCode).to.be.equal(200)
+
+        expect(rides.length).to.be.equal(3)
+
+        expect(rides).to.deep.equal(expectedRides)
+      })
+
+      describe('errors', () => {
+        describe('page', () => {
+          it('should return error if page is not a number', async () => {
+            const {
+              type,
+              statusCode,
+              body: { error_code, message },
+            } = await request(app).get('/rides?page=test')
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('INVALID_PAGINATION')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('page should be a number')
+          })
+
+          it('should return error if page is less than 1', async () => {
+            const {
+              type,
+              statusCode,
+              body: { error_code, message },
+            } = await request(app).get('/rides?page=-1')
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('INVALID_PAGINATION')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('page should be greater than 0')
+          })
+        })
+
+        describe('limit', () => {
+          it('should return error if limit is not a number', async () => {
+            const {
+              type,
+              statusCode,
+              body: { error_code, message },
+            } = await request(app).get('/rides?limit=test')
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('INVALID_PAGINATION')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('limit should be a number')
+          })
+
+          it('should return error if limit is less than 1', async () => {
+            const {
+              type,
+              statusCode,
+              body: { error_code, message },
+            } = await request(app).get('/rides?limit=-1')
+
+            expect(type).to.be.equal('application/json')
+            expect(statusCode).to.be.equal(200)
+
+            expect(error_code).to.be.a('string')
+            expect(error_code).to.be.equal('INVALID_PAGINATION')
+
+            expect(message).to.be.a('string')
+            expect(message).to.be.equal('limit should be greater than 0')
+          })
+        })
+      })
     })
   })
 
