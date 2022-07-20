@@ -6,11 +6,20 @@
   "directories": {
     "test": "tests"
   },
+  "config": {
+    "artilleryReportPath": "./artillery/reports",
+    "artilleryReportFile": "./artillery/reports/report.html",
+    "artilleryJsonFile": "./artillery/reports/test.json"
+  },
   "scripts": {
     "test": "NODE_ENV=test nyc --reporter=text --reporter lcov mocha --recursive tests",
     "start": "node index.js",
     "start:dev": "NODE_ENV=development nodemon index.js",
-    "prettify": "pretty-quick --staged"
+    "prettify": "pretty-quick --staged",
+    "generate-artillery-report-files": "mkdir -p $npm_package_config_artilleryReportPath && touch $npm_package_config_artilleryReportFile $npm_package_config_artilleryJsonFile",
+    "artillery-load-test": "artillery run ./artillery/config.yaml --output $npm_package_config_artilleryJsonFile",
+    "artillery-test-report": "npm run artillery-load-test && artillery report --output $npm_package_config_artilleryReportFile $npm_package_config_artilleryJsonFile",
+    "test:load": "npm run generate-artillery-report-files && npm run artillery-test-report"
   },
   "keywords": [
     "Xendit"
@@ -28,6 +37,7 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
+    "artillery": "^2.0.0-21",
     "chai": "^4.3.6",
     "eslint": "^8.20.0",
     "eslint-plugin-mocha": "^10.0.5",

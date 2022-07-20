@@ -1,0 +1,25 @@
+config:
+  target: 'http://localhost:8010'
+  phases:
+    - duration: 30
+      arrivalRate: 100
+  processor: './dataGenerator.js'
+
+scenarios:
+  - name: 'Add rides'
+    flow:
+      - post:
+          url: '/rides'
+          beforeRequest: generateData
+          json:
+            start_lat: '{{start_lat}}'
+            end_lat: '{{end_lat}}'
+            start_long: '{{start_long}}'
+            end_long: '{{end_long}}'
+            rider_name: '{{rider_name}}'
+            driver_name: '{{driver_name}}'
+            driver_vehicle: '{{driver_vehicle}}'
+  # - name: "Retrieve data"
+  #   flow:
+  #     - get:
+  #         url: "/rides"
