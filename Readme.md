@@ -43,7 +43,8 @@ Feel free to use any open source documentation tools such as OpenAPI / Swagger.
 1. A pull request against `master` of your fork with a clear description of the change and purpose and merge it
 
 2. **[BONUS]** Create an easy way to deploy and view the documentation in a web format and include instructions to do so
-   📄 To view the documentation, run the server with `npm start`. Open a browser, and go to `http://localhost:8081/docs`.
+
+   📄 **NOTE:** To view the documentation, open a browser, and go to [the Heroku app](https://cm-xendit-tech-exam.herokuapp.com/docs/). Changes in the documentation will automatically reflect once pushed to the `master` branch.
 
 ### Implement Tooling
 
