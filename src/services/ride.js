@@ -17,7 +17,32 @@ const {
 
 const listRides = require('../daos/ride/list')
 const createRide = require('../daos/ride/create')
+const getRide = require('../daos/ride/get')
+
 const { NoRidesFoundError } = require('../daos/ride/errors')
+
+const get = db => async (req, res) => {
+  try {
+    const { id } = req.params
+    const rides = await getRide(db)(id)
+
+    res.send(rides)
+  } catch (err) {
+    switch (err.constructor) {
+      case NoRidesFoundError:
+        res.send({
+          error_code: 'RIDES_NOT_FOUND_ERROR',
+          message: 'Could not find any rides',
+        })
+        break
+      default:
+        res.send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
+        })
+    }
+  }
+}
 
 const list = db => async (req, res) => {
   try {
@@ -141,4 +166,4 @@ const create = db => async (req, res) => {
   }
 }
 
-module.exports = { list, create }
+module.exports = { get, list, create }

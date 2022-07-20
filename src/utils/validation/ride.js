@@ -23,19 +23,23 @@ const validateEndingCoordinates = (latitude, longitude) => {
 }
 
 const validateRiderName = riderName => {
-  if (typeof riderName !== 'string' && riderName.length < 0) {
+  if (!riderName || typeof riderName !== 'string' || riderName.length < 1) {
     throw new InvalidRiderNameError()
   }
 }
 
 const validateDriverName = driverName => {
-  if (typeof driverName !== 'string' && driverName.length < 0) {
+  if (!driverName || typeof driverName !== 'string' || driverName.length < 1) {
     throw new InvalidDriverNameError()
   }
 }
 
 const validateDriverVehicle = driverVehicle => {
-  if (typeof driverVehicle !== 'string' && driverVehicle.length < 0) {
+  if (
+    !driverVehicle ||
+    typeof driverVehicle !== 'string' ||
+    driverVehicle.length < 1
+  ) {
     throw new InvalidDriverVehicleError()
   }
 }

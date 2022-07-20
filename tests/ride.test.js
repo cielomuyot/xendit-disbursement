@@ -640,7 +640,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
 
           it('should return error if driver_name is empty', async () => {
@@ -659,7 +661,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
 
           it('should return error if driver_name is undefined', async () => {
@@ -680,7 +684,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
         })
 
@@ -701,7 +707,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
 
           it('should return error if driver_vehicle is empty', async () => {
@@ -720,7 +728,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
 
           it('should return error if driver_vehicle is undefined', async () => {
@@ -741,7 +751,9 @@ describe('/rides', () => {
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
         })
       })
