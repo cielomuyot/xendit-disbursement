@@ -6,8 +6,9 @@ jobs:
       - image: node:14.17.6
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - run:
+          name: install-packages
+          command: npm install
       - run:
           name: Run tests
           command: npm test
