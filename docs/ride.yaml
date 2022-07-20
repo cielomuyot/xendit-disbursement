@@ -3,6 +3,15 @@ paths:
     get:
       summary: 'List rides'
       description: 'List rides'
+      parameters:
+        - in: query
+          name: page
+          type: number
+          description: Current page number. Defaults to 1
+        - in: query
+          name: limit
+          type: number
+          description: Length of the dataset. Defaults to 5
       produces:
         - 'application/json'
       responses:
@@ -20,11 +29,11 @@ paths:
       produces:
         - 'application/json'
       parameters:
-      - in: body
-        name: 'body'
-        required: true
-        schema:
-          $ref: '#/definitions/RideNew'
+        - in: body
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/RideNew'
       responses:
         200:
           description: 'Object containing the newly created ride'
@@ -35,10 +44,10 @@ paths:
       summary: 'Get ride by id'
       description: 'Get ride by id'
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: number
+        - in: path
+          name: id
+          required: true
+          type: number
       produces:
         - 'application/json'
       responses:
