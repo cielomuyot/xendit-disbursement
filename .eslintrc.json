@@ -11,7 +11,7 @@
   "plugins": ["mocha"],
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single", {"avoidEscape": true}],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "semi": ["error", "never"],
     "no-console": "off",
     "no-var": "error",
@@ -19,6 +19,6 @@
     "no-case-declarations": "off",
     "object-shorthand": ["error", "always"],
     "arrow-body-style": ["error", "as-needed"],
-    "indent": ["warn", 2]
+    "indent": "off"
   }
 }

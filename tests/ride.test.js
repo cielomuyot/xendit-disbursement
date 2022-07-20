@@ -2,28 +2,25 @@
 
 const { expect } = require('chai')
 const request = require('supertest')
+const createApp = require('../src/app')
 
 const { range, orderBy } = require('lodash')
 
-const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database(':memory:')
-
-const app = require('../src/app')(db)
-const buildSchemas = require('../src/schemas')
+const { initializeDb } = require('../src/utils/db')
 
 const { createRideBody, convertRideResponse } = require('./drivers/ride')
 
+const logOnlyFailingTests = require('./utils/logOnlyFailingTests')
+
 describe('/rides', () => {
-  before(done => {
-    db.serialize(err => {
-      if (err) {
-        return done(err)
-      }
+  let app
 
-      buildSchemas(db)
+  logOnlyFailingTests(afterEach)
 
-      done()
-    })
+  before(async () => {
+    const db = await initializeDb()
+
+    app = createApp(db)
   })
 
   describe('GET /', () => {
@@ -31,7 +28,7 @@ describe('/rides', () => {
       const { type, statusCode, body } = await request(app).get('/rides')
 
       expect(type).to.be.equal('application/json')
-      expect(statusCode).to.be.equal(200)
+      expect(statusCode).to.be.equal(404)
 
       expect(body).to.be.an('object')
 
@@ -188,7 +185,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?page=test')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -205,7 +202,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?page=-1')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -224,7 +221,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?limit=test')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -241,7 +238,7 @@ describe('/rides', () => {
             } = await request(app).get('/rides?limit=-1')
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('INVALID_PAGINATION')
@@ -262,7 +259,7 @@ describe('/rides', () => {
       )
 
       expect(type).to.be.equal('application/json')
-      expect(statusCode).to.be.equal(200)
+      expect(statusCode).to.be.equal(404)
 
       expect(body).to.be.an('object')
 
@@ -405,7 +402,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -426,7 +423,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -449,7 +446,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -470,7 +467,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -493,7 +490,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -514,7 +511,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -537,7 +534,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -558,7 +555,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -581,7 +578,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -600,7 +597,7 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -621,7 +618,7 @@ describe('/rides', () => {
               .send({ ...rideBody, rider_name: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
@@ -642,13 +639,15 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
 
           it('should return error if driver_name is empty', async () => {
@@ -661,13 +660,15 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
 
           it('should return error if driver_name is undefined', async () => {
@@ -682,13 +683,15 @@ describe('/rides', () => {
               .send({ ...rideBody, driver_name: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver name must be a non empty string',
+            )
           })
         })
 
@@ -703,13 +706,15 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
 
           it('should return error if driver_vehicle is empty', async () => {
@@ -722,13 +727,15 @@ describe('/rides', () => {
             } = await request(app).post('/rides').send(rideBody)
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
 
           it('should return error if driver_vehicle is undefined', async () => {
@@ -743,13 +750,15 @@ describe('/rides', () => {
               .send({ ...rideBody, driver_vehicle: undefined })
 
             expect(type).to.be.equal('application/json')
-            expect(statusCode).to.be.equal(200)
+            expect(statusCode).to.be.equal(400)
 
             expect(error_code).to.be.a('string')
             expect(error_code).to.be.equal('VALIDATION_ERROR')
 
             expect(message).to.be.a('string')
-            expect(message).to.be.equal('Rider name must be a non empty string')
+            expect(message).to.be.equal(
+              'Driver vehicle must be a non empty string',
+            )
           })
         })
       })
