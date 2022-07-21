@@ -9,6 +9,11 @@ const port = process.env.PORT || 8010
 const { initializeDb } = require('./src/utils/db')
 const { logger } = require('./src/utils/logger')
 
+process.on('SIGINT', () => {
+  logger.info('Process interrupted. Exiting app...')
+  process.exit()
+})
+
 const start = async () => {
   const db = await initializeDb()
 

@@ -6,11 +6,22 @@
   "directories": {
     "test": "tests"
   },
+  "config": {
+    "loadTestReportPath": "./load-test/reports"
+  },
   "scripts": {
     "test": "NODE_ENV=test nyc --reporter=text --reporter lcov mocha --recursive tests",
-    "start": "node index.js",
+    "start": "node --inspect index.js",
     "start:dev": "NODE_ENV=development nodemon index.js",
-    "prettify": "pretty-quick --staged"
+    "prettify": "pretty-quick --staged",
+    "test:load": "NODE_ENV=test npm run forever:start && npm run load-test:test-and-generate-report && npm run forever:stop",
+    "load-test:create-report-files": "mkdir -p $npm_package_config_loadTestReportPath && touch $npm_package_config_loadTestReportPath/report.html $npm_package_config_loadTestReportPath/test.json",
+    "load-test:start-test": "artillery run ./load-test/config.yaml --output $npm_package_config_loadTestReportPath/test.json",
+    "load-test:test-and-report": "npm run load-test:start-test && artillery report --output $npm_package_config_loadTestReportPath/report.html $npm_package_config_loadTestReportPath/test.json",
+    "load-test:test-and-generate-report": "npm run load-test:create-report-files && npm run load-test:test-and-report",
+    "forever:list": "forever list",
+    "forever:start": "echo 'forever -f -t -a start --minUptime 5000 --spinSleepTime 3000 --uid 'xendit-app' index.js' && forever -f -t -a start --minUptime 5000 --spinSleepTime 3000 --uid 'xendit-app' index.js",
+    "forever:stop": "echo 'forever stop xendit-app' && forever stop xendit-app"
   },
   "keywords": [
     "Xendit"
@@ -28,9 +39,12 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
+    "artillery": "^2.0.0-21",
+    "artillery-plugin-ensure": "^1.1.1",
     "chai": "^4.3.6",
     "eslint": "^8.20.0",
     "eslint-plugin-mocha": "^10.0.5",
+    "forever": "^4.0.3",
     "husky": "^8.0.1",
     "lodash": "^4.17.21",
     "mocha": "^9.2.1",
