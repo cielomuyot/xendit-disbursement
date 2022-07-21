@@ -14,7 +14,7 @@
     "start": "node --inspect index.js",
     "start:dev": "NODE_ENV=development nodemon index.js",
     "prettify": "pretty-quick --staged",
-    "test:load": "npm run forever:start && npm run load-test:test-and-generate-report && npm run forever:stop",
+    "test:load": "NODE_ENV=test npm run forever:start && npm run load-test:test-and-generate-report && npm run forever:stop",
     "load-test:create-report-files": "mkdir -p $npm_package_config_loadTestReportPath && touch $npm_package_config_loadTestReportPath/report.html $npm_package_config_loadTestReportPath/test.json",
     "load-test:start-test": "artillery run ./load-test/config.yaml --output $npm_package_config_loadTestReportPath/test.json",
     "load-test:test-and-report": "npm run load-test:start-test && artillery report --output $npm_package_config_loadTestReportPath/report.html $npm_package_config_loadTestReportPath/test.json",
