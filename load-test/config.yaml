@@ -1,12 +1,23 @@
 config:
+  plugins:
+    ensure: {}
   target: 'http://localhost:8010'
   phases:
     - duration: 30
       arrivalRate: 100
+      name: '30s - 100rps'
+    - duration: 30
+      arrivalRate: 100
+      rampTo: 300
+      name: '30s - 100rps ramp up to 300rps'
+  ensure:
+    thresholds:
+      # p99 of response time must be <50:
+      - 'http.response_time.p99': 50
   processor: './dataGenerator.js'
 
 scenarios:
-  - name: 'Add rides'
+  - name: 'Add rides, list and get by id'
     flow:
       - post:
           url: '/rides'
@@ -19,7 +30,7 @@ scenarios:
             rider_name: '{{rider_name}}'
             driver_name: '{{driver_name}}'
             driver_vehicle: '{{driver_vehicle}}'
-  # - name: "Retrieve data"
-  #   flow:
-  #     - get:
-  #         url: "/rides"
+      - get:
+          url: '/rides'
+      - get:
+          url: '/rides/1'
