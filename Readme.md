@@ -1,145 +1,55 @@
 # Xendit Coding Exercise
 
-The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
+This is an updated version of the `Readme.md`. If you wish to see the original version, please see the [Readme-original.md](https://github.com/cielomuyot/xendit-disbursement/blob/master/Readme-original.md) file.
 
 ## Setup
 
-1. Fork this repository to your own github profile
+1. This repository requires `node v16 and up` to run `Artillery`
 
-2. Ensure `node (>=12)` and `npm` are installed
+2. Run `npm install` to install the dependencies.
 
-3. Run `npm install`
+3. Run `npm test` to run the automated tests.
 
-4. Run `npm test`
+4. Run `npm start` to run the app, or `npm run start:dev` to run using `nodemon`.
 
-5. Run `npm start`
+5. Run `npm run test:load` to run the load testing using `Artillery` and `forever`. This will automatically spawn and stop a daemon.
 
-6. Hit the server to test health `curl localhost:8010/health` and expect a `200` response
+## Documentation
 
-## Tasks
+1. Documentation is written using Swagger.
 
-Below will be your set of tasks to accomplish. Please work on each of these tasks in order. Success criteria will be defined clearly for each task
+2. You can access it locally using `http://localhost:8010/docs`, or in [Heroku](https://cm-xendit-tech-exam.herokuapp.com/docs/).
 
-1. [Documentation](#documentation)
+3. If you wish to update the docs, go to the `./docs` folder and do the necessary changes.
 
-2. [Implement Tooling](#implement-tooling)
+## CI/CD
 
-3. [Implement Pagination](#implement-pagination)
+This project uses `CircleCI` and deploys to [Heroku](https://cm-xendit-tech-exam.herokuapp.com/). If you wish to deploy your changes, simply create a Pull Request to `master`, the pipeline will automatically run and deploy once it gets merged. The tests will also be run every time your changes are pushed.
+![image](https://user-images.githubusercontent.com/23202976/180145153-82152643-ad08-44ce-b234-a6df968ee4f6.png)
 
-4. [Refactoring](#refactoring)
+## Testing
 
-5. [Security](#security)
+### Automated tests
 
-6. [Load Testing](#load-testing)
+This project implements automated tests. Once the tests are run using `npm test`.
 
-### Documentation
+**CLI report:**
 
-Please deliver documentation of the server that clearly explains the goals of this project and clarifies the API request and response that is expected.
+![image](https://user-images.githubusercontent.com/23202976/180145977-201d6bd9-91fd-4c8e-8025-4a801ec85d26.png)
 
-Feel free to use any open source documentation tools such as OpenAPI / Swagger.
+**HTML report:**
 
-#### Success Criteria
+![image](https://user-images.githubusercontent.com/23202976/180145703-3079c57c-11fa-4855-b14c-ff5d7d7417b3.png)
 
-1. A pull request against `master` of your fork with a clear description of the change and purpose and merge it
+### Load test
 
-2. **[BONUS]** Create an easy way to deploy and view the documentation in a web format and include instructions to do so
+Load test can be done by running `npm run test:load`.
 
-   📄 **NOTE:** To view the documentation, open a browser, and go to [the Heroku app](https://cm-xendit-tech-exam.herokuapp.com/docs/). Changes in the documentation will automatically reflect once pushed to the `master` branch.
+**CLI report:**
 
-### Implement Tooling
+![image](https://user-images.githubusercontent.com/23202976/180147628-d72806c7-7e90-4eb4-b47f-e8f7f23970ae.png)
 
-Please implement the following tooling:
+**HTML report:**
 
-1.  `eslint` - for linting
-
-2.  `nyc` - for code coverage
-
-3.  `pre-push` - for git pre push hook running tests
-
-4.  `winston` - for logging
-
-#### Success Criteria
-
-1. Create a pull request against `master` of your fork with the new tooling and merge it
-
-1. `eslint` should have an opinionated format
-
-1. `nyc` should aim for test coverage of `80%` across lines, statements, and branches
-
-1. `pre-push` should run the tests before allowing pushing using `git`
-
-1. `winston` should be used to replace console logs and all errors should be logged as well. Logs should go to disk.
-
-1. Ensure that tooling is connected to `npm test`
-
-1. Ensure that tests covers possible positive and negative scenarios
-
-1. Create a separate pull request against `master` of your fork with the linter fixes and merge it
-
-1. Create a separate pull request against `master` of your fork to increase code coverage to acceptable thresholds and merge it
-
-1. **[BONUS]** Add integration to CI such as Travis or Circle
-
-1. **[BONUS]** Add Typescript support
-
-### Implement Pagination
-
-Please implement pagination to retrieve pages of the resource `rides`.
-
-1. Create a pull request against `master` with your changes to the `GET /rides` endpoint to support pagination including:
-
-1. Code changes
-
-1. Tests
-
-1. Documentation
-
-1. Merge the pull request
-
-### Refactoring
-
-Please implement the following refactors of the code:
-
-1. Convert callback style code to use `async/await`
-
-2. Reduce complexity at top level control flow logic and move logic down and test independently
-
-3. **[BONUS]** Split between functional and imperative function and test independently
-
-#### Success Criteria
-
-1. A pull request against `master` of your fork for each of the refactors above with:
-
-1. Code changes
-
-1. Tests covering positive and negative scenarios
-
-### Security
-
-Please implement the following security controls for your system:
-
-1. Ensure the system is not vulnerable to [SQL injection](https://www.owasp.org/index.php/SQL_Injection)
-
-2. **[BONUS]** Implement an additional security improvement of your choice
-
-#### Success Criteria
-
-1. A pull request against `master` of your fork with:
-
-1. Changes to the code
-
-1. Tests ensuring the vulnerability is addressed
-
-### Load Testing
-
-Please implement load testing to ensure your service can handle a high amount of traffic
-
-#### Success Criteria
-
-1. Implement load testing using `artillery`
-
-1. Create a PR against `master` of your fork including artillery
-
-1. Ensure that load testing is able to be run using `npm test:load`. You can consider using a tool like `forever` to spin up a daemon and kill it after the load test has completed.
-
-1. Test all endpoints under at least `100 rps` for `30s` and ensure that `p99` is under `50ms`
+![image](https://user-images.githubusercontent.com/23202976/180147746-819044a4-7145-44cb-bd93-223606551d25.png)
+![image](https://user-images.githubusercontent.com/23202976/180147700-b76e9c72-1a68-4609-a0ff-c05f13db8d52.png)
