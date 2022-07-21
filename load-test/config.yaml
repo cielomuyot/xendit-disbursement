@@ -17,7 +17,7 @@ config:
   processor: './dataGenerator.js'
 
 scenarios:
-  - name: 'Add rides, list and get by id'
+  - name: 'Add rides'
     flow:
       - post:
           url: '/rides'
@@ -30,7 +30,11 @@ scenarios:
             rider_name: '{{rider_name}}'
             driver_name: '{{driver_name}}'
             driver_vehicle: '{{driver_vehicle}}'
+  - name: 'List rides'
+    flow:
       - get:
           url: '/rides'
+  - name: 'Get ride by id'
+    flow:
       - get:
           url: '/rides/1'
